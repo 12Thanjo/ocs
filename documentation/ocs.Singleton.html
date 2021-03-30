@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<link rel="icon" href="favicon.ico">
+		<title>ocs Documentation | ocs.Singleton</title>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
+	</head>
+	<header>
+		<datalist id="entities"></datalist>
+		<div class="menu-bar" id="desktop-navbar">
+		    <div class="left">
+		        <button class="menubar-btn" onclick="location.href='./ocs.html'">ocs</button>
+		    </div>
+		    <div class="right">
+		    	<button class="menubar-btn" id="dark-mode" onclick="toggle_mode();">Dark Mode</button>
+		    	
+		        <input id="search" placeholder="Search..." list="entities" style="width: 250px;">
+		        <button id="search-button" onclick="search();">Search</button>
+		    </div>
+		</div>
+
+		<div class="menu-bar" id="mobile-navbar">
+			<button class="menubar-btn" id="mobile-path-button">Path</button>
+			<button class="menubar-btn"></button>
+			<button class="menubar-btn" id="dark-mode-mobile" onclick="toggle_mode();">Dark Mode</button>
+			<button class="menubar-btn" id='mobile-search-button'>Search</button>
+		</div>
+		<div class="menu-bar mobile-interactive" id="path-navbar">
+			<div class="right">
+		        <button class="menubar-btn" onclick="location.href='./ocs.html'">ocs</button><script type="text/javascript">var path = "ocs.Singleton";</script
+			</div>
+		</div>
+		<div class="menu-bar mobile-interactive" id="search-navbar">
+			<div style="float: right">
+				<input id="search-mobile" placeholder="Search..." list="entities">
+				<button id="search-button-mobile" onclick="search();">Search</button>
+			</div>
+		</div>
+		<script type="text/javascript" src="./entity list.JSON"></script>
+		<script type="text/javascript">
+			var path_navbar = document.getElementById('path-navbar');
+			path_navbar.style.visibility = "hidden";
+			var search_navbar = document.getElementById('search-navbar');
+			search_navbar.style.visibility = "hidden";
+
+
+			document.getElementById('mobile-path-button').onclick = ()=>{
+				if(path_navbar.style.visibility == 'hidden'){
+					path_navbar.style.visibility = "visible";
+					search_navbar.style.visibility = "hidden";
+				}else{
+					path_navbar.style.visibility = "hidden";
+				}
+			}
+
+			document.getElementById('mobile-search-button').onclick = ()=>{
+				if(search_navbar.style.visibility == 'hidden'){
+					search_navbar.style.visibility = "visible";
+					path_navbar.style.visibility = "hidden";
+				}else{
+					search_navbar.style.visibility = "hidden";
+				}
+			}
+
+
+			var path_arr = path.split('.');
+			var head = path_arr[0];
+
+
+			var datalist = document.getElementById('entities');
+			entity_search_list.forEach((entity)=>{
+				datalist.innerHTML += `<option value="${entity}">`
+			});
+			var entity_list_set = new Set(entity_list);
+			var entity_search_list_set = new Set(entity_list);
+
+			search = function(){
+				var desktop = document.getElementById('search').value;
+				var mobile = document.getElementById('search-mobile').value;
+				var query = "";
+				if(desktop != ""){
+					query = desktop;
+				}else{
+					query = mobile;
+				}
+
+				if(entity_list_set.has(query)){
+					location.href = `./${head}.${query}.html`;
+				}else{
+					var arr = query.split('.');
+					var last = arr[arr.length-1];
+					var href = query.substr(0, query.length - last.length - 1);
+
+					if(entity_list_set.has(href)){
+						location.href = `./${head}.${href}.html#${last}`;
+					}
+				}
+			}
+
+
+			document.addEventListener('keydown', (event)=>{
+				if(event.keyCode == 13){
+					search();
+				}
+			});
+
+
+
+
+			create_cookie = function(cname, cvalue){
+			    document.cookie = cname + ' =' + cvalue + "; path=/; SameSite=None; Secure";
+			}
+
+			delete_cookie = function(cname){
+			    document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			}
+
+
+			get_cookie = function(cname){
+			    var name = cname + "=";
+			    var ca = document.cookie.split(';');
+			    for(var i = 0; i < ca.length; i++){
+			        var c = ca[i];
+			        while(c.charAt(0) == ' '){
+			            c = c.substring(1);
+			        }
+			        if(c.indexOf(name) == 0){
+			            return c.substring(name.length, c.length);
+			        }
+			    }
+			    return "";
+			}
+
+			var forEach = function(arr, event){
+				var length = arr.length;
+				for(var i=0; i<arr.length;i++){
+					event(arr[i]);
+				}
+			}
+
+			var mode = "light";
+			toggle_mode = function(){
+				if(mode == "light"){
+					set_mode('dark');
+				}else{
+					set_mode('light');
+				}
+			}
+
+			set_mode = function(_mode){
+				console.log(_mode);
+				if(_mode == "dark"){
+					mode = "dark";
+					create_cookie('viewmode', 'dark');
+					document.getElementById('dark-mode').innerHTML = "Light Mode";
+					document.getElementById('dark-mode-mobile').innerHTML = "Light Mode";
+
+					// css
+					document.body.classList.toggle('dark');
+					forEach(document.getElementsByClassName('code'), (div)=>{
+						div.classList.add('dark-code');
+					});
+					forEach(document.getElementsByTagName('a'), (div)=>{
+						div.classList.add('dark');
+					});
+					forEach(document.getElementsByClassName('menu-bar'), (div)=>{
+						div.classList.add('menu-bar-dark');
+					});
+					forEach(document.getElementsByTagName('th'), (div)=>{
+						div.classList.add('dark');
+					});
+					forEach(document.getElementsByTagName('tr'), (div)=>{
+						div.classList.add('dark');
+					});
+				}else{
+					mode = "light";
+					create_cookie('viewmode', 'light');
+					document.getElementById('dark-mode').innerHTML = "Dark Mode";
+					document.getElementById('dark-mode-mobile').innerHTML = "Dark Mode";
+
+					// css
+					document.body.classList.toggle('dark');
+					forEach(document.getElementsByClassName('code'), (div)=>{
+						div.classList.remove('dark-code');
+					});
+					forEach(document.getElementsByTagName('a'), (div)=>{
+						div.classList.remove('dark');
+					});
+					forEach(document.getElementsByClassName('menu-bar'), (div)=>{
+						div.classList.remove('menu-bar-dark');
+					});
+					forEach(document.getElementsByTagName('th'), (div)=>{
+						div.classList.remove('dark');
+					});
+					forEach(document.getElementsByTagName('tr'), (div)=>{
+						div.classList.remove('dark');
+					});
+				}
+			}
+
+			if(get_cookie('viewmode') != ""){
+				mode = get_cookie('viewmode');
+				document.addEventListener("DOMContentLoaded", ()=>{
+					set_mode(mode);
+				});
+			}else{
+				create_cookie('viewmode', 'light');
+			}
+		</script>
+	</header>
+	<body>
+		<div id="container">
+			<div id="header-spacing"></div><h1>Singleton</h1><p>creates a single instance of an object or module that can be accessed in any module</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Singleton</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>the unique name of the Singleton</td>
+											</tr></table><h4>Methods</h4><ul><li><a href="#duplicate">duplicate</a></li><li><a href="#destroy">destroy</a></li></ul><h4>Properties</h4><ul><li><a href="#name">name</a></li><li><a href="#instance">instance</a></li></ul><hr><h2>Methods</h2><h3 id="duplicate" style="margin-top: 0px;">duplicate</a></h3><p style="margin-top: 0px;">duplicate the Singleton</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Singleton</span>.<span class="green">duplicate</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="white">Nunber</span></var></td>
+												<td>the name of the new Singleton</td>
+											</tr></table><h3 id="destroy">destroy</a></h3><p style="margin-top: 0px;">destroy this Singleton</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Singleton</span>.<span class="green">destroy</span>();</div><br><br><h2>Properties</h2><h3 id="name" style="margin-top: 0px;">name</h3><p ><var><span class="yellow">String</span></var></p><p style="margin-top: 0px;">reference to the name of the Singleton</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Singleton</span>.<span class="green">name</span></div><h3 id="instance">instance</h3><p ><var><span class="blue">Object</span></var></p><p style="margin-top: 0px;">reference to the name of the instance</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Singleton</span>.<span class="green">instance</span></div><br><br>
+		</div>
+	</body>
+	<footer>
+		<p>Documentation Generated by <a href="https://www.npmjs.com/package/scrybe">Scrybe</a></p>
+	</footer>
+</html>

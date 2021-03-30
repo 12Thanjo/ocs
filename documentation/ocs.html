@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<link rel="icon" href="favicon.ico">
+		<title>ocs Documentation</title>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
+	</head>
+	<header>
+		<datalist id="entities"></datalist>
+		<div class="menu-bar" id="desktop-navbar">
+		    <div class="left">
+		        <button class="menubar-btn">ocs</button>
+		    </div>
+		    <div class="right">
+		    	<button class="menubar-btn" id="dark-mode" onclick="toggle_mode();">Dark Mode</button>
+		    	
+		        <input id="search" placeholder="Search..." list="entities" style="width: 250px;">
+		        <button id="search-button" onclick="search();">Search</button>
+		    </div>
+		</div>
+
+		<div class="menu-bar" id="mobile-navbar">
+			<button class="menubar-btn" id="mobile-path-button">Path</button>
+			<button class="menubar-btn"></button>
+			<button class="menubar-btn" id="dark-mode-mobile" onclick="toggle_mode();">Dark Mode</button>
+			<button class="menubar-btn" id='mobile-search-button'>Search</button>
+		</div>
+		<div class="menu-bar mobile-interactive" id="path-navbar">
+			<div class="right">
+		        <button class="menubar-btn">ocs</button><script type="text/javascript">var path = "ocs";</script
+			</div>
+		</div>
+		<div class="menu-bar mobile-interactive" id="search-navbar">
+			<div style="float: right">
+				<input id="search-mobile" placeholder="Search..." list="entities">
+				<button id="search-button-mobile" onclick="search();">Search</button>
+			</div>
+		</div>
+		<script type="text/javascript" src="./entity list.JSON"></script>
+		<script type="text/javascript">
+			var path_navbar = document.getElementById('path-navbar');
+			path_navbar.style.visibility = "hidden";
+			var search_navbar = document.getElementById('search-navbar');
+			search_navbar.style.visibility = "hidden";
+
+
+			document.getElementById('mobile-path-button').onclick = ()=>{
+				if(path_navbar.style.visibility == 'hidden'){
+					path_navbar.style.visibility = "visible";
+					search_navbar.style.visibility = "hidden";
+				}else{
+					path_navbar.style.visibility = "hidden";
+				}
+			}
+
+			document.getElementById('mobile-search-button').onclick = ()=>{
+				if(search_navbar.style.visibility == 'hidden'){
+					search_navbar.style.visibility = "visible";
+					path_navbar.style.visibility = "hidden";
+				}else{
+					search_navbar.style.visibility = "hidden";
+				}
+			}
+
+
+			var path_arr = path.split('.');
+			var head = path_arr[0];
+
+
+			var datalist = document.getElementById('entities');
+			entity_search_list.forEach((entity)=>{
+				datalist.innerHTML += `<option value="${entity}">`
+			});
+			var entity_list_set = new Set(entity_list);
+			var entity_search_list_set = new Set(entity_list);
+
+			search = function(){
+				var desktop = document.getElementById('search').value;
+				var mobile = document.getElementById('search-mobile').value;
+				var query = "";
+				if(desktop != ""){
+					query = desktop;
+				}else{
+					query = mobile;
+				}
+
+				if(entity_list_set.has(query)){
+					location.href = `./${head}.${query}.html`;
+				}else{
+					var arr = query.split('.');
+					var last = arr[arr.length-1];
+					var href = query.substr(0, query.length - last.length - 1);
+
+					if(entity_list_set.has(href)){
+						location.href = `./${head}.${href}.html#${last}`;
+					}
+				}
+			}
+
+
+			document.addEventListener('keydown', (event)=>{
+				if(event.keyCode == 13){
+					search();
+				}
+			});
+
+
+
+
+			create_cookie = function(cname, cvalue){
+			    document.cookie = cname + ' =' + cvalue + "; path=/; SameSite=None; Secure";
+			}
+
+			delete_cookie = function(cname){
+			    document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			}
+
+
+			get_cookie = function(cname){
+			    var name = cname + "=";
+			    var ca = document.cookie.split(';');
+			    for(var i = 0; i < ca.length; i++){
+			        var c = ca[i];
+			        while(c.charAt(0) == ' '){
+			            c = c.substring(1);
+			        }
+			        if(c.indexOf(name) == 0){
+			            return c.substring(name.length, c.length);
+			        }
+			    }
+			    return "";
+			}
+
+			var forEach = function(arr, event){
+				var length = arr.length;
+				for(var i=0; i<arr.length;i++){
+					event(arr[i]);
+				}
+			}
+
+			var mode = "light";
+			toggle_mode = function(){
+				if(mode == "light"){
+					set_mode('dark');
+				}else{
+					set_mode('light');
+				}
+			}
+
+			set_mode = function(_mode){
+				console.log(_mode);
+				if(_mode == "dark"){
+					mode = "dark";
+					create_cookie('viewmode', 'dark');
+					document.getElementById('dark-mode').innerHTML = "Light Mode";
+					document.getElementById('dark-mode-mobile').innerHTML = "Light Mode";
+
+					// css
+					document.body.classList.toggle('dark');
+					forEach(document.getElementsByClassName('code'), (div)=>{
+						div.classList.add('dark-code');
+					});
+					forEach(document.getElementsByTagName('a'), (div)=>{
+						div.classList.add('dark');
+					});
+					forEach(document.getElementsByClassName('menu-bar'), (div)=>{
+						div.classList.add('menu-bar-dark');
+					});
+					forEach(document.getElementsByTagName('th'), (div)=>{
+						div.classList.add('dark');
+					});
+					forEach(document.getElementsByTagName('tr'), (div)=>{
+						div.classList.add('dark');
+					});
+				}else{
+					mode = "light";
+					create_cookie('viewmode', 'light');
+					document.getElementById('dark-mode').innerHTML = "Dark Mode";
+					document.getElementById('dark-mode-mobile').innerHTML = "Dark Mode";
+
+					// css
+					document.body.classList.toggle('dark');
+					forEach(document.getElementsByClassName('code'), (div)=>{
+						div.classList.remove('dark-code');
+					});
+					forEach(document.getElementsByTagName('a'), (div)=>{
+						div.classList.remove('dark');
+					});
+					forEach(document.getElementsByClassName('menu-bar'), (div)=>{
+						div.classList.remove('menu-bar-dark');
+					});
+					forEach(document.getElementsByTagName('th'), (div)=>{
+						div.classList.remove('dark');
+					});
+					forEach(document.getElementsByTagName('tr'), (div)=>{
+						div.classList.remove('dark');
+					});
+				}
+			}
+
+			if(get_cookie('viewmode') != ""){
+				mode = get_cookie('viewmode');
+				document.addEventListener("DOMContentLoaded", ()=>{
+					set_mode(mode);
+				});
+			}else{
+				create_cookie('viewmode', 'light');
+			}
+		</script>
+	</header>
+	<body>
+		<div id="container">
+			<div id="header-spacing"></div><h1>ocs</h1><p>a programming paradigm combining traits of OOP and ECS</p><h4>Classes</h4><ul><li><a href='./ocs.EEO.html'>EEO</a></li><li><a href='./ocs.Environment.html'>Environment</a></li><li><a href='./ocs.Component.html'>Component</a></li><li><a href='./ocs.Entity.html'>Entity</a></li><li><a href='./ocs.Tag.html'>Tag</a></li><li><a href='./ocs.Singleton.html'>Singleton</a></li></ul><h4>Methods</h4><ul><li><a href="#getEnvironment">getEnvironment</a></li><li><a href="#getComponent">getComponent</a></li><li><a href="#getEntity">getEntity</a></li><li><a href="#getTag">getTag</a></li><li><a href="#getSingleton">getSingleton</a></li><li><a href="#getAllWithComponents">getAllWithComponents</a></li><li><a href="#printAllWithComponents">printAllWithComponents</a></li></ul><hr><h2>Classes</h2><h3 id="EEO" style="margin-top: 0px;"><a href='./ocs.EEO.html'>EEO</a></h3><p style="margin-top: 0px;">Event Emitting Object. For use in the creation of components. Event is run when the value of a specific property that an Entity gets from a Component is changed.</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">EEO</span>(<span class="orange">obj</span>, <span class="orange">event</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+													</tr><tr>
+													<td><var>obj</var></td>
+													<td><var><span class="blue">Object</span></var></td>
+													<td>object for usein component</td>
+												</tr><tr>
+													<td><var>event</var></td>
+													<td><var><span class="blue">Function</span></var></td>
+													<td>event to run when propertiies of obj are changed. Takes (entity, key, val) as parameters</td>
+												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Environment.html'>Environment</a></h3><p style="margin-top: 0px;">environment </p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Environment</span>(<span class="orange">name</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+													</tr><tr>
+													<td><var>name</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>unique name of the Environment</td>
+												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Component.html'>Component</a></h3><p style="margin-top: 0px;">defines properties that can be added to entities</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Component</span>(<span class="orange">environment</span>, <span class="orange">name</span>, <span class="orange">builder</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+													</tr><tr>
+													<td><var>environment</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>name of the environment to add the component to</td>
+												</tr><tr>
+													<td><var>name</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>unique name of the component</td>
+												</tr><tr>
+													<td><var>builder</var></td>
+													<td><var><span class="blue">Function</span></var></td>
+													<td>a function that returns an object containing properties to add to entities. This function can take whatever parameters you would like</td>
+												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Entity.html'>Entity</a></h3><p style="margin-top: 0px;">general purpose object</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Entity</span>(<span class="orange">environment</span>, <span class="orange">name</span>, <span class="orange">limit</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+														<th>Default</th>
+													</tr><tr>
+													<td><var>environment</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>name of the Environment to add the Entity to</td>
+													<td></td>
+												</tr><tr>
+													<td><var>name</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>unique name of the Entity</td>
+													<td></td>
+												</tr><tr>
+													<td><var>limit</var></td>
+													<td><var><span class="purple">Int</span></var></td>
+													<td><b>(OPTIONAL)</b> limit of key depth when adding Components</td>
+													<td><var><span class="purple">3</span></var></td>
+												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Tag.html'>Tag</a></h3><p style="margin-top: 0px;">Tag identifiers that can be added to Entities</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Tag</span>(<span class="orange">name</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+													</tr><tr>
+													<td><var>name</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>the unique name of the Tag</td>
+												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Singleton.html'>Singleton</a></h3><p style="margin-top: 0px;">creates a single instance of an object or module that can be accessed in any module</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Singleton</span>(<span class="orange">name</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+													</tr><tr>
+													<td><var>name</var></td>
+													<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+													<td>the unique name of the Singleton</td>
+												</tr></table><br><br><h2>Methods</h2><h3 id="getEnvironment" style="margin-top: 0px;">getEnvironment</a></h3><p style="margin-top: 0px;">get a specific Environment</p><div class="code"><span class="blue">ocs</span>.<span class="green">getEnvironment</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>name of the Environment</td>
+											</tr></table><h3 id="getComponent">getComponent</a></h3><p style="margin-top: 0px;">get a specific Component</p><div class="code"><span class="blue">ocs</span>.<span class="green">getComponent</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>name of the Component</td>
+											</tr></table><h3 id="getEntity">getEntity</a></h3><p style="margin-top: 0px;">get a specific Entity</p><div class="code"><span class="blue">ocs</span>.<span class="green">getEntity</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>name of the Entity</td>
+											</tr></table><h3 id="getTag">getTag</a></h3><p style="margin-top: 0px;">get a specific Tag</p><div class="code"><span class="blue">ocs</span>.<span class="green">getTag</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>name of the Tag</td>
+											</tr></table><h3 id="getSingleton">getSingleton</a></h3><p style="margin-top: 0px;">get a specific Singleton</p><div class="code"><span class="blue">ocs</span>.<span class="green">getSingleton</span>(<span class="orange">name</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>name</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>name of the Singleton</td>
+											</tr></table><h3 id="getAllWithComponents">getAllWithComponents</a></h3><p style="margin-top: 0px;">get all entities that contain a sinlge (or multiple) component</p><div class="code"><span class="blue">ocs</span>.<span class="green">getAllWithComponents</span>(<span class="orange">environment</span>, <span class="orange">components</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>environment</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>Environment to search</td>
+											</tr><tr>
+												<td><var>components</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="white">[</span><span class="yellow">String</span><span class="white">]</span></var></td>
+												<td>component or components to check for</td>
+											</tr></table><h3 id="printAllWithComponents">printAllWithComponents</a></h3><p style="margin-top: 0px;">get the names of all entities that contain a sinlge (or multiple) component</p><div class="code"><span class="blue">ocs</span>.<span class="green">printAllWithComponents</span>(<span class="orange">environment</span>, <span class="orange">components</span>);</div><br><br><table>
+												<tr>
+													<th>Parameter</th>
+													<th>Type</th>
+													<th>Description</th>
+												</tr><tr>
+												<td><var>environment</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
+												<td>Environment to search</td>
+											</tr><tr>
+												<td><var>components</var></td>
+												<td><var><span class="yellow">String</span></var> / <var><span class="white">[</span><span class="yellow">String</span><span class="white">]</span></var></td>
+												<td>component or components to check for</td>
+											</tr></table><br><br>
+		</div>
+	</body>
+	<footer>
+		<p>Documentation Generated by <a href="https://www.npmjs.com/package/scrybe">Scrybe</a></p>
+	</footer>
+</html>
