@@ -1,0 +1,5 @@
+documentation/
+.git/
+.npmignore
+performance.js
+scrybe.js

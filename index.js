@@ -138,6 +138,9 @@ var OCS = function(){
 				}
 			});
 
+			if(!components_entities.has(environment)){
+				throw new ReferenceError(`Environment (${environment}) is not set`);
+			}
 			this.#environment = environments.get(environment);
 			components_entities.get(environment).set(name, new Set());
 			components.get(environment).set(name, this);
