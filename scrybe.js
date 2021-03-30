@@ -10,7 +10,7 @@ var OCS = function(){
 	* @type class
 	* @description Event Emitting Object. For use in the creation of components. Event is run when the value of a specific property that an Entity gets from a Component is changed.
 	* @param {obj}{Object}{object for usein component}
-	* @param {event}{Function}{event to run when propertiies of obj are changed. Takes (entity, key, val) as parameters}
+	* @param {event}{Function}{event to run when properties of obj are changed. Takes (entity, key, val) as parameters}
 	}
 	*/
 	var EEO = class{
@@ -48,7 +48,7 @@ var OCS = function(){
 			* @type property
 			* @description a reference to the keys associated with the EEO.
 			* @parent EEO
-			* @proto [String,Number]
+			* @proto [String],[Number]
 			*/
 			Object.defineProperty(this, "keys", {
 				get: ()=>{
