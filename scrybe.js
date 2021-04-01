@@ -13,6 +13,8 @@ var OCS = function(){
 	* @param {event}{Function}{event to run when properties of obj are changed. Takes (entity, key, val) as parameters}
 	}
 	*/
+	var { version } = require('./package.json');
+	console.log(`%c OCS Initialized | v${version} `, "background-color: #00667f ; color: #cccccc ; font-size: 16px ; font-family: 'american typewriter';");
 	var EEO = class{
 		#store;
 		#event;

@@ -1,5 +1,6 @@
 var OCS = function(){
-	console.log("OCS initialized");
+	var { version } = require('./package.json');
+	console.log(`%c OCS Initialized | v${version} `, "background-color: #00667f ; color: #cccccc ; font-size: 16px ; font-family: 'american typewriter';");
 	var EEO = class{
 		#store;
 		#event;
