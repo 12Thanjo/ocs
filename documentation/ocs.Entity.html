@@ -149,7 +149,6 @@
 			}
 
 			set_mode = function(_mode){
-				console.log(_mode);
 				if(_mode == "dark"){
 					mode = "dark";
 					create_cookie('viewmode', 'dark');
@@ -232,7 +231,7 @@
 												<td><var><span class="purple">Int</span></var></td>
 												<td><b>(OPTIONAL)</b> limit of key depth when adding Components</td>
 												<td><var><span class="purple">3</span></var></td>
-											</tr></table><h4>Methods</h4><ul><li><a href="#addTag">addTag</a></li><li><a href="#hasTag">hasTag</a></li><li><a href="#removeTag">removeTag</a></li><li><a href="#printTags">printTags</a></li><li><a href="#addComponent">addComponent</a></li><li><a href="#hasComponent">hasComponent</a></li><li><a href="#removeComponent">removeComponent</a></li><li><a href="#printComponents">printComponents</a></li><li><a href="#destroy">destroy</a></li></ul><h4>Properties</h4><ul><li><a href="#name">name</a></li></ul><hr><h2>Methods</h2><h3 id="addTag" style="margin-top: 0px;">addTag</a></h3><p style="margin-top: 0px;">add a Tag to this Entity</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">addTag</span>(<span class="orange">tag</span>);</div><br><br><table>
+											</tr></table><h4>Methods</h4><ul><li><a href="#addTag">addTag</a></li><li><a href="#hasTag">hasTag</a></li><li><a href="#removeTag">removeTag</a></li><li><a href="#printTags">printTags</a></li><li><a href="#addComponent">addComponent</a></li><li><a href="#hasComponent">hasComponent</a></li><li><a href="#removeComponent">removeComponent</a></li><li><a href="#printComponents">printComponents</a></li><li><a href="#destroy">destroy</a></li></ul><h4>Properties</h4><ul><li><a href="#name">name</a></li><li><a href="#environment">environment</a></li></ul><hr><h2>Methods</h2><h3 id="addTag" style="margin-top: 0px;">addTag</a></h3><p style="margin-top: 0px;">add a Tag to this Entity</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">addTag</span>(<span class="orange">tag</span>);</div><br><br><table>
 												<tr>
 													<th>Parameter</th>
 													<th>Type</th>
@@ -290,7 +289,7 @@
 												<td><var>component</var></td>
 												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
 												<td>name of the Component</td>
-											</tr></table><h3 id="printComponents">printComponents</a></h3><p style="margin-top: 0px;">returns an array of the names of all the Components this Entity has</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">printComponents</span>();</div><h3 id="destroy">destroy</a></h3><p style="margin-top: 0px;">destroy this Entity</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">destroy</span>();</div><br><br><h2>Properties</h2><h3 id="name" style="margin-top: 0px;">name</h3><p ></p><p style="margin-top: 0px;">reference to the name of the Entity</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">name</span></div><br><br>
+											</tr></table><h3 id="printComponents">printComponents</a></h3><p style="margin-top: 0px;">returns an array of the names of all the Components this Entity has</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">printComponents</span>();</div><h3 id="destroy">destroy</a></h3><p style="margin-top: 0px;">destroy this Entity</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">destroy</span>();</div><br><br><h2>Properties</h2><h3 id="name" style="margin-top: 0px;">name</h3><p ></p><p style="margin-top: 0px;">reference to the name of the Entity</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">name</span></div><h3 id="environment">environment</h3><p ></p><p style="margin-top: 0px;">reference to the Environment this Entity is a part of</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Entity</span>.<span class="green">environment</span></div><br><br>
 		</div>
 	</body>
 	<footer>

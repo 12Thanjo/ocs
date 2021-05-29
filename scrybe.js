@@ -33,7 +33,7 @@ var OCS = function(){
 			this.#keys = [];
 
 			var self = this;
-			var odp = function(key){
+			var odp = function(key){// stands for 
 				Object.defineProperty(self, key, {
 					get: ()=>{
 						return self.#store[key];
@@ -78,6 +78,9 @@ var OCS = function(){
 			});
 		}
 	}
+
+
+
 
 
 	/*
@@ -375,6 +378,18 @@ var OCS = function(){
 
 			this.#limit = limit || 3;
 			this.#store = {};
+
+			/*
+			* @name environment
+			* @type property
+			* @description reference to the Environment this Entity is a part of
+			* @parent Entity
+			*/
+			Object.defineProperty(this, "environment", {
+				get: ()=>{
+					return this.#environment;
+				}
+			});
 		}
 
 		/*

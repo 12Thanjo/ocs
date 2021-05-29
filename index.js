@@ -208,6 +208,12 @@ var OCS = function(){
 
 			this.#limit = limit || 2;
 			this.#store = {};
+
+			Object.defineProperty(this, "environment", {
+				get: ()=>{
+					return this.#environment;
+				}
+			});
 		}
 
 		addTag = function(tag){
