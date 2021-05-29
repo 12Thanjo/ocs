@@ -83,7 +83,8 @@ var OCS = function(){
 	* @name Getter
 	* @type class
 	* @description For use in the creation of components. Event is run when getting the value of a specific property and this property does not have a setter.
-	* @parent 
+	* @param {arr}{[String]}{keys of the getter}
+	* @param {event}{Function}{event to run when when the property is gotten. Takes (entity, key) as parameters}
 	*/
 	var Getter = class{
 		#event;
@@ -110,8 +111,8 @@ var OCS = function(){
 			/*
 			* @name keys
 			* @type property
-			* @description a reference to the keys associated with the EEO.
-			* @parent EEO
+			* @description a reference to the keys associated with the Getter.
+			* @parent Getter
 			* @proto [String],[Number]
 			*/
 			Object.defineProperty(this, "keys", {
@@ -123,8 +124,8 @@ var OCS = function(){
 			/*
 			* @name event
 			* @type method
-			* @description a reference to the event associated with this EEO
-			* @parent EEO
+			* @description a reference to the event associated with this Getter
+			* @parent Getter
 			*/
 			Object.defineProperty(this, "event", {
 				get: ()=>{

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<link rel="icon" href="favicon.ico">
-		<title>ocs Documentation | ocs.Component</title>
+		<title>ocs Documentation | ocs.Getter</title>
 		<link rel="stylesheet" type="text/css" href="style.css"/>
 	</head>
 	<header>
@@ -28,7 +28,7 @@
 		</div>
 		<div class="menu-bar mobile-interactive" id="path-navbar">
 			<div class="right">
-		        <button class="menubar-btn" onclick="location.href='./ocs.html'">ocs</button><script type="text/javascript">var path = "ocs.Component";</script>
+		        <button class="menubar-btn" onclick="location.href='./ocs.html'">ocs</button><script type="text/javascript">var path = "ocs.Getter";</script>
 			</div>
 		</div>
 		<div class="menu-bar mobile-interactive" id="search-navbar">
@@ -212,33 +212,20 @@
 	</header>
 	<body>
 		<div id="container">
-			<div id="header-spacing"></div><h1>Component</h1><p>defines properties that can be added to entities</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Component</span>(<span class="orange">environment</span>, <span class="orange">name</span>, <span class="orange">builder</span>);</div><br><br><table>
+			<div id="header-spacing"></div><h1>Getter</h1><p>For use in the creation of components. Event is run when getting the value of a specific property and this property does not have a setter.</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Getter</span>(<span class="orange">arr</span>, <span class="orange">event</span>);</div><br><br><table>
 												<tr>
 													<th>Parameter</th>
 													<th>Type</th>
 													<th>Description</th>
 												</tr><tr>
-												<td><var>environment</var></td>
-												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
-												<td>name of the environment to add the component to</td>
+												<td><var>arr</var></td>
+												<td><var><span class="white">[</span><span class="yellow">String</span><span class="white">]</span></var></td>
+												<td>keys of the getter</td>
 											</tr><tr>
-												<td><var>name</var></td>
-												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
-												<td>unique name of the component</td>
-											</tr><tr>
-												<td><var>builder</var></td>
+												<td><var>event</var></td>
 												<td><var><span class="blue">Function</span></var></td>
-												<td>a function that returns an object containing properties to add to entities. This function can take whatever parameters you would like</td>
-											</tr></table><h4>Methods</h4><ul><li><a href="#getEntites">getEntites</a></li><li><a href="#printEntites">printEntites</a></li><li><a href="#duplicate">duplicate</a></li><li><a href="#destroy">destroy</a></li></ul><h4>Properties</h4><ul><li><a href="#name">name</a></li><li><a href="#builder">builder</a></li></ul><hr><h2>Methods</h2><h3 id="getEntites" style="margin-top: 0px;">getEntites</a></h3><p style="margin-top: 0px;">returns an array of all the Entities containing this Component</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Component</span>.<span class="green">getEntites</span>();</div><h3 id="printEntites">printEntites</a></h3><p style="margin-top: 0px;">returns an array of the names of all the Entities containing this Component</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Component</span>.<span class="green">printEntites</span>();</div><h3 id="duplicate">duplicate</a></h3><p style="margin-top: 0px;">duplicate this Component to another Environment</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Component</span>.<span class="green">duplicate</span>(<span class="orange">environment</span>);</div><br><br><table>
-												<tr>
-													<th>Parameter</th>
-													<th>Type</th>
-													<th>Description</th>
-												</tr><tr>
-												<td><var>environment</var></td>
-												<td><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></td>
-												<td>Name of the Environment to add the duplicated Component to</td>
-											</tr></table><h3 id="destroy">destroy</a></h3><p style="margin-top: 0px;">destroy this Component and remove it from all Entities that have this Component</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Component</span>.<span class="green">destroy</span>();</div><br><br><h2>Properties</h2><h3 id="name" style="margin-top: 0px;">name</h3><p ><var><span class="yellow">String</span></var> / <var><span class="purple">Number</span></var></p><p style="margin-top: 0px;">reference to the name of the component</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Component</span>.<span class="green">name</span></div><h3 id="builder">builder</h3><p ><var><span class="blue">Function</span></var></p><p style="margin-top: 0px;">reference to the builder of the component</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Component</span>.<span class="green">builder</span></div><br><br>
+												<td>event to run when when the property is gotten. Takes (entity, key) as parameters</td>
+											</tr></table><h4>Methods</h4><ul><li><a href="#event">event</a></li></ul><h4>Properties</h4><ul><li><a href="#keys">keys</a></li></ul><hr><h2>Methods</h2><h3 id="event" style="margin-top: 0px;">event</a></h3><p style="margin-top: 0px;">a reference to the event associated with this Getter</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Getter</span>.<span class="green">event</span>();</div><br><br><h2>Properties</h2><h3 id="keys" style="margin-top: 0px;">keys</h3><p ><var><span class="white">[</span><span class="yellow">String</span><span class="white">]</span></var> / <var><span class="white">[</span><span class="purple">Number</span><span class="white">]</span></var></p><p style="margin-top: 0px;">a reference to the keys associated with the Getter.</p><div class="code"><span class="blue">ocs</span>.<span class="blue">Getter</span>.<span class="green">keys</span></div><br><br>
 		</div>
 	</body>
 	<footer>

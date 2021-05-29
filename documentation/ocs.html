@@ -142,8 +142,10 @@
 			var mode = "light";
 			toggle_mode = function(){
 				if(mode == "light"){
+					console.log("set to dark");
 					set_mode('dark');
 				}else{
+					console.log("set to light");
 					set_mode('light');
 				}
 			}
@@ -210,7 +212,7 @@
 	</header>
 	<body>
 		<div id="container">
-			<div id="header-spacing"></div><h1>ocs</h1><p>a programming paradigm combining traits of OOP and ECS</p><h4>Classes</h4><ul><li><a href='./ocs.EEO.html'>EEO</a></li><li><a href='./ocs.Environment.html'>Environment</a></li><li><a href='./ocs.Component.html'>Component</a></li><li><a href='./ocs.Entity.html'>Entity</a></li><li><a href='./ocs.Tag.html'>Tag</a></li><li><a href='./ocs.Singleton.html'>Singleton</a></li></ul><h4>Methods</h4><ul><li><a href="#getEnvironment">getEnvironment</a></li><li><a href="#getComponent">getComponent</a></li><li><a href="#getEntity">getEntity</a></li><li><a href="#getTag">getTag</a></li><li><a href="#getSingleton">getSingleton</a></li><li><a href="#getAllWithComponents">getAllWithComponents</a></li><li><a href="#printAllWithComponents">printAllWithComponents</a></li></ul><hr><h2>Classes</h2><h3 id="EEO" style="margin-top: 0px;"><a href='./ocs.EEO.html'>EEO</a></h3><p style="margin-top: 0px;">Event Emitting Object. For use in the creation of components. Event is run when the value of a specific property that an Entity gets from a Component is changed.</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">EEO</span>(<span class="orange">obj</span>, <span class="orange">event</span>);</div><br><br><table>
+			<div id="header-spacing"></div><h1>ocs</h1><p>a programming paradigm combining traits of OOP and ECS</p><h4>Classes</h4><ul><li><a href='./ocs.EEO.html'>EEO</a></li><li><a href='./ocs.Getter.html'>Getter</a></li><li><a href='./ocs.Environment.html'>Environment</a></li><li><a href='./ocs.Component.html'>Component</a></li><li><a href='./ocs.Entity.html'>Entity</a></li><li><a href='./ocs.Tag.html'>Tag</a></li><li><a href='./ocs.Singleton.html'>Singleton</a></li></ul><h4>Methods</h4><ul><li><a href="#getEnvironment">getEnvironment</a></li><li><a href="#getComponent">getComponent</a></li><li><a href="#getEntity">getEntity</a></li><li><a href="#getTag">getTag</a></li><li><a href="#getSingleton">getSingleton</a></li><li><a href="#getAllWithComponents">getAllWithComponents</a></li><li><a href="#printAllWithComponents">printAllWithComponents</a></li></ul><hr><h2>Classes</h2><h3 id="EEO" style="margin-top: 0px;"><a href='./ocs.EEO.html'>EEO</a></h3><p style="margin-top: 0px;">Event Emitting Object. For use in the creation of components. Event is run when the value of a specific property that an Entity gets from a Component is changed.</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">EEO</span>(<span class="orange">obj</span>, <span class="orange">event</span>);</div><br><br><table>
 													<tr>
 														<th>Parameter</th>
 														<th>Type</th>
@@ -223,6 +225,19 @@
 													<td><var>event</var></td>
 													<td><var><span class="blue">Function</span></var></td>
 													<td>event to run when properties of obj are changed. Takes (entity, key, val) as parameters</td>
+												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Getter.html'>Getter</a></h3><p style="margin-top: 0px;">For use in the creation of components. Event is run when getting the value of a specific property and this property does not have a setter.</p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Getter</span>(<span class="orange">arr</span>, <span class="orange">event</span>);</div><br><br><table>
+													<tr>
+														<th>Parameter</th>
+														<th>Type</th>
+														<th>Description</th>
+													</tr><tr>
+													<td><var>arr</var></td>
+													<td><var><span class="white">[</span><span class="yellow">String</span><span class="white">]</span></var></td>
+													<td>keys of the getter</td>
+												</tr><tr>
+													<td><var>event</var></td>
+													<td><var><span class="blue">Function</span></var></td>
+													<td>event to run when when the property is gotten. Takes (entity, key) as parameters</td>
 												</tr></table><h3 style="margin-top: 0px;"><a href='./ocs.Environment.html'>Environment</a></h3><p style="margin-top: 0px;">environment </p><div class="code"><span class="red">new</span> <span class="blue">ocs</span>.<span class="green">Environment</span>(<span class="orange">name</span>);</div><br><br><table>
 													<tr>
 														<th>Parameter</th>
