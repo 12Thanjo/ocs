@@ -33,7 +33,7 @@ var OCS = function(){
 			this.#keys = [];
 
 			var self = this;
-			var odp = function(key){// stands for 
+			var odp = function(key){// stands for Object.defineProperty
 				Object.defineProperty(self, key, {
 					get: ()=>{
 						return self.#store[key];
@@ -79,6 +79,60 @@ var OCS = function(){
 		}
 	}
 
+	/*
+	* @name Getter
+	* @type class
+	* @description For use in the creation of components. Event is run when getting the value of a specific property and this property does not have a setter.
+	* @parent 
+	*/
+	var Getter = class{
+		#event;
+		#keys;
+		constructor(arr, event){
+			this.#event = event;
+			this.entity = {};
+			this.#keys = [];
+
+			var self = this;
+			var odp = function(key){
+				Object.defineProperty(self, key, {
+					get: ()=>{
+						return self.#event(self.entity, key);
+					}
+				});					
+			}
+
+			arr.forEach((key)=>{
+				odp(key);
+				this.#keys.push(key);
+			});
+
+			/*
+			* @name keys
+			* @type property
+			* @description a reference to the keys associated with the EEO.
+			* @parent EEO
+			* @proto [String],[Number]
+			*/
+			Object.defineProperty(this, "keys", {
+				get: ()=>{
+					return this.#keys;
+				}
+			});
+
+			/*
+			* @name event
+			* @type method
+			* @description a reference to the event associated with this EEO
+			* @parent EEO
+			*/
+			Object.defineProperty(this, "event", {
+				get: ()=>{
+					return this.#event;
+				}
+			});
+		}
+	}
 
 
 
@@ -456,6 +510,7 @@ var OCS = function(){
 			if(comp != null){
 				var builder = comp.builder(...params);
 				if(builder instanceof EEO){
+					builder.entity = this;
 					builder.keys.forEach((key)=>{
 						if(this[key] != null){
 							throw new SyntaxError(`key (${key}) in Entity (${this.#name}) has already been declared`);
@@ -472,10 +527,24 @@ var OCS = function(){
 							}
 						});
 					});
+				}else if(builder instanceof Getter){
+					builder.entity = this;
+					builder.keys.forEach((key)=>{
+						if(this[key] != null){
+							throw new SyntaxError(`key (${key}) in Entity (${this.#name}) has already been declared`);
+						}
+
+						Object.defineProperty(this, key, {
+							configurable: true,
+							get: ()=>{
+								return builder.event(this, key);
+							}
+						});
+					});
 				}else{
 					var traverse_builder = function(target, self, count){
 						if(typeof target == "object" && target != null && count > 0){
-							if(target instanceof EEO){
+							if(target instanceof EEO || target instanceof Getter){
 								target.entity = self;
 							}
 							for(var key in target){
@@ -532,6 +601,12 @@ var OCS = function(){
 						set: ()=>{}
 					});
 					delete this.#store[key];
+				});
+			}if(builder instanceof Getter){
+				builder.keys.forEach((key)=>{
+					Object.defineProperty(this, key, {
+						get: ()=>{}
+					});
 				});
 			}else{
 				for(var key in builder){
@@ -713,165 +788,141 @@ var OCS = function(){
 	}
 
 
-	/*
-	* @name getEnvironment
-	* @type method
-	* @description get a specific Environment
-	* @param {name}{String,Number}{name of the Environment}
-	*/
-	this.getEnvironment = function(name){
-		return environments.get(name);
-	}
 
-	/*
-	* @name getComponent
-	* @type method
-	* @description get a specific Component
-	* @param {name}{String,Number}{name of the Component}
-	*/
-	this.getComponent = function(environment, name){
-		return components.get(environment).get(name);
-	}
+	return {
+		Environment: Environment,
+		Component: Component,
+		Entity: Entity,
+		Tag: Tag,
+		EEO: EEO,
+		Getter: Getter,
+		Singleton: Singleton,
 
-	/*
-	* @name getEntity
-	* @type method
-	* @description get a specific Entity
-	* @param {name}{String,Number}{name of the Entity}
-	*/
-	this.getEntity = function(environment, name){
-		return entities.get(environment).get(name);
-	}
+		/*
+		* @name getEnvironment
+		* @type method
+		* @description get a specific Environment
+		* @param {name}{String,Number}{name of the Environment}
+		*/
+		getEnvironment: function(name){
+			return environments.get(name);
+		},
 
-	/*
-	* @name getTag
-	* @type method
-	* @description get a specific Tag
-	* @param {name}{String,Number}{name of the Tag}
-	*/
-	this.getTag = function(name){
-		return tags.get(name);
-	}
+		/*
+		* @name getComponent
+		* @type method
+		* @description get a specific Component
+		* @param {name}{String,Number}{name of the Component}
+		*/
+		getComponent: function(environment, name){
+			return components.get(environment).get(name);
+		},
 
-	/*
-	* @name getSingleton
-	* @type method
-	* @description get a specific Singleton
-	* @param {name}{String,Number}{name of the Singleton}
-	*/
-	this.getSingleton = function(name){
-		return singletons.get(name);
-	}
+		/*
+		* @name getEntity
+		* @type method
+		* @description get a specific Entity
+		* @param {name}{String,Number}{name of the Entity}
+		*/
 
-	/*
-	* @name getAllWithComponents
-	* @type method
-	* @description get all entities that contain a sinlge (or multiple) component
-	* @param {environment}{String,Number}{Environment to search}
-	* @param {components}{String,[String]}{component or components to check for}
-	*/
-	this.getAllWithComponents = function(environment, components){
-		if(components instanceof Array){
-			if(components.length > 1){
-				var list = this.getComponent(environment, components[0]).getEntities();
-				var output = [];
-				var env = environments.get(environment);
-				list.forEach((entity_name)=>{
-					var pass = true;
-					var entity = env.getEntity(entity_name);
+		getEntity: function(environment, name){
+			return entities.get(environment).get(name);
+		},
 
-					for(var i = components.length - 1; i>0; i--){
-						if(!entity.hasComponent(components[i])){
-							pass = false;
-							break;
+		/*
+		* @name getTag
+		* @type method
+		* @description get a specific Tag
+		* @param {name}{String,Number}{name of the Tag}
+		*/
+		getTag: function(name){
+			return tags.get(name);
+		},
+
+		/*
+		* @name getSingleton
+		* @type method
+		* @description get a specific Singleton
+		* @param {name}{String,Number}{name of the Singleton}
+		*/
+		getSingleton: function(name){
+			return singletons.get(name);
+		},
+
+		/*
+		* @name getAllWithComponents
+		* @type method
+		* @description get all entities that contain a sinlge (or multiple) component
+		* @param {environment}{String,Number}{Environment to search}
+		* @param {components}{String,[String]}{component or components to check for}
+		*/
+		getAllWithComponents: function(environment, components){
+			if(components instanceof Array){
+				if(components.length > 1){
+					var list = this.getComponent(environment, components[0]).getEntities();
+					var output = [];
+					var env = environments.get(environment);
+					list.forEach((entity_name)=>{
+						var pass = true;
+						var entity = env.getEntity(entity_name);
+
+						for(var i = components.length - 1; i>0; i--){
+							if(!entity.hasComponent(components[i])){
+								pass = false;
+								break;
+							}
 						}
-					}
 
-					if(pass){
-						output.push(entity);
-					}
-				});
-				return output;
-			}else{
-				return this.getComponent(environment, components[0]).getEntities();
-			}
-		}else{
-			return this.getComponent(environment, components).getEntities();
-		}
-	}
-
-	/*
-	* @name printAllWithComponents
-	* @type method
-	* @description get the names of all entities that contain a sinlge (or multiple) component
-	* @param {environment}{String,Number}{Environment to search}
-	* @param {components}{String,[String]}{component or components to check for}
-	*/
-	this.printAllWithComponents = function(environment, components){
-		if(components instanceof Array){
-			if(components.length > 1){
-				var list = this.getComponent(environment, components[0]).getEntities();
-				var output = [];
-				var env = environments.get(environment);
-				list.forEach((entity_name)=>{
-					var pass = true;
-					var entity = env.getEntity(entity_name);
-
-					for(var i = components.length - 1; i>0; i--){
-						if(!entity.hasComponent(components[i])){
-							pass = false;
-							break;
+						if(pass){
+							output.push(entity);
 						}
-					}
-
-					if(pass){
-						output.push(entity.name);
-					}
-				});
-				return output;
+					});
+					return output;
+				}else{
+					return this.getComponent(environment, components[0]).getEntities();
+				}
 			}else{
-				return this.getComponent(environment, components[0]).printEntities();
+				return this.getComponent(environment, components).getEntities();
 			}
-		}else{
-			return this.getComponent(environment, components).printEntities();
-		}
+		},
+
+		/*
+		* @name printAllWithComponents
+		* @type method
+		* @description get the names of all entities that contain a sinlge (or multiple) component
+		* @param {environment}{String,Number}{Environment to search}
+		* @param {components}{String,[String]}{component or components to check for}
+		*/
+		printAllWithComponents: function(environment, components){
+			if(components instanceof Array){
+				if(components.length > 1){
+					var list = this.getComponent(environment, components[0]).getEntities();
+					var output = [];
+					var env = environments.get(environment);
+					list.forEach((entity_name)=>{
+						var pass = true;
+						var entity = env.getEntity(entity_name);
+
+						for(var i = components.length - 1; i>0; i--){
+							if(!entity.hasComponent(components[i])){
+								pass = false;
+								break;
+							}
+						}
+
+						if(pass){
+							output.push(entity.name);
+						}
+					});
+					return output;
+				}else{
+					return this.getComponent(environment, components[0]).printEntities();
+				}
+			}else{
+				return this.getComponent(environment, components).printEntities();
+			}
+		},
 	}
-
-	Object.defineProperty(this, "Environment", {
-		get: ()=>{
-			return Environment;
-		}
-	});
-
-	Object.defineProperty(this, "Component", {
-		get: ()=>{
-			return Component;
-		}
-	});
-
-	Object.defineProperty(this, "Entity", {
-		get: ()=>{
-			return Entity;
-		}
-	});
-
-	Object.defineProperty(this, "Tag", {
-		get: ()=>{
-			return Tag;
-		}
-	});
-
-	Object.defineProperty(this, "EEO", {
-		get: ()=>{
-			return EEO;
-		}
-	});
-
-	Object.defineProperty(this, "Singleton", {
-		get: ()=>{
-			return Singleton;
-		}
-	});
 }
 
 module.exports = new OCS();

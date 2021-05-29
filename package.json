@@ -1,6 +1,6 @@
 {
   "name": "ocs",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "a programming paradigm combining traits of OOP and ECS",
   "main": "index.js",
   "scripts": {
